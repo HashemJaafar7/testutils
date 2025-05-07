@@ -1,4 +1,4 @@
-module golang_test_packege
+module go_test
 
 go 1.22.1
 

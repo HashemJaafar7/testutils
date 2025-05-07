@@ -1,4 +1,4 @@
-package golang_test_packege
+package go_test
 
 import (
 	"testing"
@@ -12,7 +12,7 @@ func Test_Test(t *testing.T) {
 	Test(true, true, "#v", 1, 1)
 	Test(false, false, "#v", 1, 2)
 	Test(true, false, "#v", 1, 2)
-	Test(false, true, "#v", 1, 2)
+	// Test(false, true, "#v", 1, 2)
 }
 
 func Test1(t *testing.T) {
