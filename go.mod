@@ -1,6 +1,6 @@
 module github.com/HashemJaafar7/go_test
 
-go 1.22.1
+go 1.24.3
 
 require github.com/samber/lo v1.39.0
 
