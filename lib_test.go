@@ -3,8 +3,6 @@ package go_test
 import (
 	"testing"
 	"time"
-
-	"github.com/samber/lo"
 )
 
 func Test_Test(t *testing.T) {
@@ -16,9 +14,14 @@ func Test_Test(t *testing.T) {
 }
 
 func Test1(t *testing.T) {
-	names := lo.Uniq[string]([]string{"Samuel", "John", "Samuel"})
+	names := []string{"Samuel", "John", "Samuel"}
 	Debug("v", names)
 	Debug("x", names)
+
+	age := 10
+	Debug("v", age)
+	Debug("v", Stack())
+	Debug("v", Rand[int]())
 }
 
 func Test3(t *testing.T) {
@@ -42,11 +45,4 @@ func Test4(t *testing.T) {
 			time.Sleep(10 * time.Millisecond)
 		},
 	)
-}
-
-func Test7(t *testing.T) {
-	age := 10
-	Debug("v", age)
-	Debug("v", Stack())
-	Debug("v", Rand[int]())
 }
