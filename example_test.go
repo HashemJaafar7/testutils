@@ -18,17 +18,17 @@ func Example() {
 	gt.Debug("v", randomString)
 
 	// Example of stack trace
-	stackTrace := gt.Stack()
+	stackTrace := gt.Stack(8)
 	gt.Debug("v", stackTrace)
 
 	// Examples of Test function
-	gt.Test(true, true, "v", 42, 42)            // Equal values
-	gt.Test(true, false, "v", "hello", "world") // Different values
+	gt.Test(true, true, true, 8, "v", 42, 42)            // Equal values
+	gt.Test(true, true, false, 8, "v", "hello", "world") // Different values
 
 	// Example with slices
 	slice1 := []int{1, 2, 3}
 	slice2 := []int{1, 2, 3}
-	gt.Test(true, true, "v", slice1, slice2)
+	gt.Test(true, true, true, 8, "v", slice1, slice2)
 
 	// Example of struct comparison
 	type Person struct {
@@ -37,7 +37,7 @@ func Example() {
 	}
 	p1 := Person{"John", 30}
 	p2 := Person{"John", 30}
-	gt.Test(true, true, "v", p1, p2)
+	gt.Test(true, true, true, 8, "v", p1, p2)
 
 	// Example of Benchmark
 	gt.Benchmark(5,

@@ -6,11 +6,11 @@ import (
 )
 
 func Test_Test(t *testing.T) {
-	Test(false, true, "#v", 1, 1)
-	Test(true, true, "#v", 1, 1)
-	Test(false, false, "#v", 1, 2)
-	Test(true, false, "#v", 1, 2)
-	// Test(false, true, "#v", 1, 2)
+	Test(true, false, true, 8, "#v", 1, 1)
+	Test(true, true, true, 8, "#v", 1, 1)
+	Test(true, false, false, 8, "#v", 1, 2)
+	Test(true, true, false, 8, "#v", 1, 2)
+	// Test(true, false, true,8, "#v", 1, 2)
 }
 
 func Test1(t *testing.T) {
@@ -20,7 +20,7 @@ func Test1(t *testing.T) {
 
 	age := 10
 	Debug("v", age)
-	Debug("v", Stack())
+	Debug("v", Stack(8))
 	Debug("v", Rand[int]())
 }
 

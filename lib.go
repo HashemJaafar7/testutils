@@ -55,13 +55,29 @@ func Rand[t any]() t {
 	return result
 }
 
-// Stack returns a string representation of the caller's stack trace at a specific depth.
-// It extracts and formats the 8th line of the stack trace, which typically corresponds
-// to the caller's location in the code. The returned string is trimmed of whitespace
-// and tab characters for readability.
-func Stack() string {
+// Stack retrieves a specific line from the current goroutine's stack trace.
+// It returns the specified line as a string after removing leading/trailing whitespace and tabs.
+//
+// Parameters:
+//   - line: The line number to retrieve from the stack trace (must be >= 6 and even)
+//
+// Returns:
+//   - string: The requested line from the stack trace
+//
+// Panics:
+//   - If line is less than 6
+//   - If line is not an even number
+
+func Stack(line uint16) string {
+	if line < 6 {
+		panic("the line should be bigger than 5")
+	}
+	if line%2 != 0 {
+		panic("the line should be even")
+	}
+
 	stack := string(debug.Stack())
-	stack = strings.Split(stack, "\n")[8]
+	stack = strings.Split(stack, "\n")[line]
 	stack = strings.TrimSpace(strings.ReplaceAll(stack, "\t", ""))
 
 	return stack
@@ -127,7 +143,7 @@ func getLineFromStack(stack string) string {
 // to extract the variable name and prints the variable name and its value in
 // yellow, followed by a separator line for clarity.
 func Debug(format string, a any) {
-	stack := Stack()
+	stack := Stack(8)
 	fmt.Println(ColorMagenta, stack, ColorReset)
 	line := getLineFromStack(stack)
 
@@ -138,34 +154,34 @@ func Debug(format string, a any) {
 	fmt.Println("________________________________________________________________________________")
 }
 
-// Test is a generic testing utility function that compares two values and optionally prints
-// debugging information. It uses reflection to determine equality between the actual and
-// expected values.
-//
-// Type Parameters:
-//   - t: The type of the values being compared.
+// Test is a generic testing function that compares two values and provides formatted output.
 //
 // Parameters:
-//   - print (bool): If true, the function prints debugging information to the console.
-//   - isEqual (bool): Indicates whether the actual and expected values are expected to be equal.
-//   - format (string): A format string used for printing the actual and expected values.
-//   - actual (t): The actual value to be tested.
-//   - expected (t): The expected value to compare against.
+//   - t: Any type parameter for the values being compared
+//   - isPanic: If true, exits program when test fails
+//   - print: If true, prints test results regardless of pass/fail
+//   - isEqual: Expected equality relationship between actual and expected
+//   - line: Line number for stack trace (must be > 8)
+//   - format: Printf format string for value output
+//   - actual: The value being tested
+//   - expected: The value to test against
 //
-// Behavior:
-//   - If the comparison result (using reflect.DeepEqual) does not match the isEqual parameter,
-//     the function prints an error message, the stack trace, and the actual/expected values,
-//     then exits the program with a status code of 1.
-//   - If the comparison result matches the isEqual parameter, and the print parameter is true,
-//     the function prints a success message along with the actual/expected values.
+// The function:
+//   - Validates line number is > 8
+//   - Compares actual vs expected using reflect.DeepEqual
+//   - Prints colored stack traces and formatted values
+//   - Can exit program on test failure if isPanic is true
+//   - Supports testing for both equality and inequality based on isEqual flag
 //
-// Notes:
-//   - The function uses a helper function Stack() to retrieve the stack trace.
-//   - Color-coded output is used for better readability, with colors defined by constants
-//     such as ColorRed, ColorGreen, ColorYellow, and ColorBlue.
-//   - The function terminates the program on failure using os.Exit(1).
-func Test[t any](print, isEqual bool, format string, actual, expected t) {
-	stack := Stack()
+// Example usage:
+//
+//	Test(true, false, true, 10, "%v", actual, expected) // Test equality with panic on failure
+//	Test(false, true, false, 8, "%d", val1, val2) // Test inequality with output
+func Test[t any](isPanic, print, isEqual bool, line uint16, format string, actual, expected t) {
+	if line < 8 {
+		panic("the line should be bigger than 8")
+	}
+	stack := Stack(line)
 
 	printStack := func(color string) {
 		fmt.Println(color, stack, ColorReset)
@@ -192,7 +208,9 @@ func Test[t any](print, isEqual bool, format string, actual, expected t) {
 		printExpected()
 		fmt.Println("________________________________________________________________________________")
 
-		os.Exit(1)
+		if isPanic {
+			os.Exit(1)
+		}
 	}
 	printStack(ColorGreen)
 
@@ -271,7 +289,7 @@ func Benchmark(loops uint, codesBlocks ...func()) {
 		return list[i].duration < list[j].duration
 	})
 
-	fmt.Println(ColorCyan, Stack(), ColorReset)
+	fmt.Println(ColorCyan, Stack(8), ColorReset)
 
 	for _, v := range list {
 		fmt.Printf("block index %v: it takes %v and %v for each loop\n", v.blockIndex, v.duration, v.duration/time.Duration(loops))
