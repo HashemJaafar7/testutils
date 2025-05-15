@@ -1,4 +1,4 @@
-package go_test
+package testutils
 
 import (
 	"fmt"
@@ -211,8 +211,9 @@ func Test[t any](isPanic, print, isEqual bool, line uint16, format string, actua
 		if isPanic {
 			os.Exit(1)
 		}
+	} else {
+		printStack(ColorGreen)
 	}
-	printStack(ColorGreen)
 
 	if print {
 		if isEqual {

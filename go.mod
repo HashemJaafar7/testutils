@@ -1,4 +1,4 @@
-module github.com/HashemJaafar7/go_test
+module github.com/HashemJaafar7/testutils
 
 go 1.24.3
 
