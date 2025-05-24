@@ -68,6 +68,10 @@ func Rand[t any]() t {
 //   - If line is less than 6
 //   - If line is not an even number
 
+func GetLine() string {
+	return Stack(8)
+}
+
 func Stack(line uint16) string {
 	if line < 6 {
 		panic("the line should be bigger than 5")
@@ -297,4 +301,31 @@ func Benchmark(loops uint, codesBlocks ...func()) {
 	}
 
 	fmt.Println("________________________________________________________________________________")
+}
+
+func TestCase[t any](format string, line string, input any, expected, actual t) {
+	printName := func() {
+		fmt.Printf("%vline: %v%v\n\n", ColorRed, line, ColorReset)
+	}
+	printInput := func() {
+		fmt.Printf("%vInput:%v\n", ColorMagenta, ColorReset)
+		fmt.Printf("%v%"+format+"%v\n", ColorMagenta, input, ColorReset)
+	}
+	printActual := func() {
+		fmt.Printf("%vActual:%v\n", ColorYellow, ColorReset)
+		fmt.Printf("%v%"+format+"%v\n", ColorYellow, actual, ColorReset)
+	}
+	printExpected := func() {
+		fmt.Printf("%vExpected:%v\n", ColorBlue, ColorReset)
+		fmt.Printf("%v%"+format+"%v\n", ColorBlue, expected, ColorReset)
+	}
+
+	if !reflect.DeepEqual(actual, expected) {
+		printName()
+		printInput()
+		printActual()
+		printExpected()
+		fmt.Println("________________________________________________________________________________")
+		os.Exit(1)
+	}
 }

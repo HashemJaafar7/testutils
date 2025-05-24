@@ -1,6 +1,7 @@
 package testutils
 
 import (
+	"math"
 	"testing"
 	"time"
 )
@@ -45,4 +46,61 @@ func Test4(t *testing.T) {
 			time.Sleep(10 * time.Millisecond)
 		},
 	)
+}
+
+func TestTestCase(t *testing.T) {
+
+	type input struct {
+		X float64
+		Y float64
+	}
+	type output struct {
+		z   float64
+		err error
+	}
+	tests := []struct {
+		Name   string
+		Input  input
+		Output output
+	}{
+		{
+			Name: "pass",
+			Input: input{
+				X: 1,
+				Y: 5,
+			},
+			Output: output{
+				z:   5,
+				err: nil,
+			},
+		},
+		{
+			Name: "pass",
+			Input: input{
+				X: 6,
+				Y: 5,
+			},
+			Output: output{
+				z:   6,
+				err: nil,
+			},
+		},
+		// {
+		// 	Name: "hashem",
+		// 	Input: input{
+		// 		X: 1,
+		// 		Y: 7,
+		// 	},
+		// 	Output: output{
+		// 		z:   5,
+		// 		err: nil,
+		// 	},
+		// },
+	}
+	for _, tt := range tests {
+		var act output
+		act.z = math.Max(tt.Input.X, tt.Input.Y)
+		act.err = nil
+		TestCase("v", tt.Name, tt.Input, tt.Output, act)
+	}
 }
